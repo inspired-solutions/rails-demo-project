@@ -2,14 +2,14 @@ class DogBreedFetcher
   attr_reader :breed
 
   def initialize(name=nil)
-    @name  = breed || "random"
+    @name = name
     @breed = Breed.find_or_initialize_by(name: name)
   end
 
   def fetch
-    return @breed if @breed.pic_url.present?
+    # return @breed if @breed.pic_url.present?
 
-    @breed.pic_url = fetch_info["message"]
+    @breed.pic_url = fetch_info(@name)["message"]
     @breed.save && @breed
   end
 
@@ -19,9 +19,14 @@ class DogBreedFetcher
   end
 
 private
-  def fetch_info
+  def fetch_info(name)
     begin
-      JSON.parse(RestClient.get("https://dog.ceo/api/breeds/image/#{ @name }").body)
+      array_names = name.split(' ')
+      if array_names.size == 1
+        JSON.parse(RestClient.get("https://dog.ceo/api/breed/#{array_names[0]}/images/random").body)
+      else
+        JSON.parse(RestClient.get("https://dog.ceo/api/breed/#{array_names[0]}/#{array_names[1]}/images/random").body)
+      end
     rescue Object => e
       default_body
     end

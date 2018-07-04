@@ -1,9 +1,27 @@
 <div class="dog">
 
-  <h1>It's a dog</h1>
+  <h1>Choose a dog</h1>
+
+  <select class="dogs">
+    <%= @breeds.each do |breed_name, value| %>
+        <% if value.empty? %>
+            <option> <%= breed_name %> </option>
+        <% else %>
+            <%= value.each do |val| %>
+              <option> <%= breed_name + ' ' + val %></option>
+            <% end %>
+        <% end %>
+    <% end %>
+  </select>
 
   <h3><%= @breed.name.humanize %></h3>
-
-  <%= image_tag @breed.pic_url %>
+  <div class="image-box">
+    <div class="image-box-cover">
+      <div class="spinner">
+        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+      </div>
+    </div>
+    <%= image_tag @breed.pic_url %>
+  </div>
 
 </div>
